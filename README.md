@@ -2,6 +2,12 @@
 
 A powerful personal assistant tool designed to help users remember information and support visual learners through interactive AI conversations and automatic visualization generation.
 
+## 📚 Documentation
+
+- **[Quick Start Guide](QUICK_START.md)** - Get started in 3 easy steps
+- **[Usage Guide](USAGE_GUIDE.md)** - Detailed instructions, examples, and workflows
+- **[Examples](examples.py)** - Run demos without an API key
+
 ## Features
 
 ### 🧠 Memory System
