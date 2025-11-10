@@ -2,7 +2,14 @@
 Main Interview Assistant Application
 """
 import threading
-from pynput import keyboard
+try:
+    from pynput import keyboard
+    PYNPUT_AVAILABLE = True
+except ImportError:
+    PYNPUT_AVAILABLE = False
+    print("⚠️  pynput not available. Hotkeys will be disabled.")
+    print("   Install with: pip install pynput")
+
 from typing import Optional
 import time
 
@@ -38,7 +45,8 @@ class InterviewAssistant:
         self.overlay = InvisibleOverlay(
             width=Config.OVERLAY_WIDTH,
             height=Config.OVERLAY_HEIGHT,
-            opacity=Config.OVERLAY_OPACITY
+            opacity=Config.OVERLAY_OPACITY,
+            capture_callback=self.capture_and_analyze
         )
         
         # State
@@ -121,6 +129,11 @@ class InterviewAssistant:
     
     def _setup_hotkeys(self):
         """Setup global hotkeys"""
+        if not PYNPUT_AVAILABLE:
+            print("⚠️  Hotkeys disabled (pynput not available)")
+            print("   You can still use the application through the UI")
+            return
+        
         def on_activate_capture():
             print("\n🎯 Capture hotkey activated!")
             threading.Thread(target=self.capture_and_analyze, daemon=True).start()

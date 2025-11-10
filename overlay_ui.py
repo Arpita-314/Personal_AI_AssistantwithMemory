@@ -8,11 +8,12 @@ from typing import Dict, List, Optional
 class InvisibleOverlay:
     """Semi-transparent overlay window for displaying interview assistance"""
     
-    def __init__(self, width: int, height: int, opacity: float):
+    def __init__(self, width: int, height: int, opacity: float, capture_callback=None):
         self.width = width
         self.height = height
         self.opacity = opacity
         self.visible = False
+        self.capture_callback = capture_callback
         
         # Create main window
         self.root = tk.Tk()
@@ -89,6 +90,24 @@ class InvisibleOverlay:
         # Memory tab
         self.memory_frame = self._create_memory_tab()
         self.notebook.add(self.memory_frame, text="📚 Memory")
+        
+        # Control buttons frame
+        control_frame = tk.Frame(self.root, bg='#2d2d2d')
+        control_frame.pack(fill=tk.X, padx=5, pady=5)
+        
+        self.capture_btn = tk.Button(
+            control_frame,
+            text="📸 Capture & Analyze",
+            bg='#0078d4',
+            fg='#ffffff',
+            font=('Arial', 9, 'bold'),
+            cursor='hand2',
+            border=0,
+            padx=10,
+            pady=5,
+            command=self._on_capture_click
+        )
+        self.capture_btn.pack(fill=tk.X)
         
         # Status bar
         self.status_label = tk.Label(
@@ -255,6 +274,12 @@ class InvisibleOverlay:
             self.hide()
         else:
             self.show()
+    
+    def _on_capture_click(self):
+        """Handle capture button click"""
+        if self.capture_callback:
+            import threading
+            threading.Thread(target=self.capture_callback, daemon=True).start()
     
     def run(self):
         """Start the UI event loop"""
